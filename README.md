@@ -34,8 +34,8 @@ This file contains the main Lambda function handler that processes dataframes, m
 
 **Features:**
 
-- Lambda function handler for processing dataframes.
-- Preprocessing, merging, and uploading results to an S3 bucket.
+- **Lambda function handler for processing dataframes.**
+- **Preprocessing, merging, and uploading results to an S3 bucket.**
 
 ## 5. main.py
 
@@ -43,8 +43,8 @@ This file contains the main function that processes dataframes, merges data, and
 
 **Features:**
 
-- Main function for processing dataframes and merging data.
-- Reading CSV files locally and writing merged results to separate CSV files.
+- **Main function for processing dataframes and merging data.**
+- **Reading CSV files locally and writing merged results to separate CSV files.**
 
 ## 6. match_cer_inv.py
 
@@ -52,6 +52,6 @@ This file contains the main function that processes several CSV files containing
 
 **Features:**
 
-- Main function for processing multiple CSV files.
-- Concatenating and merging records based on specific conditions.
-- Writing merged results to separate CSV files.
+- **Main function for processing multiple CSV files.**
+- **Concatenating and merging records based on specific conditions.**
+- **Writing merged results to separate CSV files.**
