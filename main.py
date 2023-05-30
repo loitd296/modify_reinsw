@@ -43,11 +43,11 @@ def main():
 
     with ThreadPoolExecutor() as executor:
         for result_name, result_df in merged_cert_results.items():
-            file_path = f"{output_directory_cert}{result_name}.csv"
+            file_path = f"{output_directory_cert}{result_name}"
             executor.submit(result_df.to_csv, file_path, index=False)
 
         for result_name, result_df in merged_inv_results.items():
-            file_path = f"{output_directory_inv}{result_name}.csv"
+            file_path = f"{output_directory_inv}{result_name}"
             executor.submit(result_df.to_csv, file_path, index=False)
 
 

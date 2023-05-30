@@ -12,21 +12,21 @@ OUTPUT_PATH_INDIVIDUAL = "data/licence_individual.csv"
 OUTPUT_PATH_REINSW = "data/licence_reinsw.csv"
 
 # matching certificate & individual
-CERTIFICATE_LICNUM = 'result-of-IMIS-with-fairtrading-and-certificates/match_cert_and_imis_with_license_number.csv'
-CERTIFICATE_LICNUM_LIC = 'result-of-IMIS-with-fairtrading-and-certificates/match_cert_and_imis_with_license_number_and_licensee.csv'
-CERTIFICATE_LICNUM_LIC_FNAME_LNAME = 'result-of-IMIS-with-fairtrading-and-certificates/match_cert_and_imis_with_licence_number_licencee_fname_lname.csv'
-CERTIFICATE_FULL_CONDITION = 'result-of-IMIS-with-fairtrading-and-certificates/match_cert_and_imis_with_licence_number_licencee_fname_lname_address.csv'
-CERTIFICATE_LIC = 'result-of-IMIS-with-fairtrading-and-certificates/match_cert_and_imis_with_licensee.csv'
-CERTIFICATE_LIC_FNAME_LNAME = 'result-of-IMIS-with-fairtrading-and-certificates/match_cert_and_imis_licencee_fname_lname.csv'
-CERTIFICATE_LIC_FNAME_LNAME_ADDRESS = 'result-of-IMIS-with-fairtrading-and-certificates/match_cert_and_imis_licencee_fname_lname_address.csv'
+CERTIFICATE_LICNUM = 'result_cer_reinsw/1_match_cert_and_imis_with_license_number.csv'
+CERTIFICATE_LICNUM_LIC = 'result_cer_reinsw/2_match_cert_and_imis_with_license_number_and_licensee.csv'
+CERTIFICATE_LICNUM_LIC_FNAME_LNAME = 'result_cer_reinsw/3_match_cert_and_imis_with_licence_number_licencee_fname_lname.csv'
+CERTIFICATE_FULL_CONDITION = 'result_cer_reinsw/4_match_cert_and_imis_with_licence_number_licencee_fname_lname_address.csv'
+CERTIFICATE_LIC = 'result_cer_reinsw/5_match_cert_and_imis_with_licensee.csv'
+CERTIFICATE_LIC_FNAME_LNAME = 'result_cer_reinsw/6_match_cert_and_imis_licencee_fname_lname.csv'
+CERTIFICATE_LIC_FNAME_LNAME_ADDRESS = 'result_cer_reinsw/7_match_cert_and_imis_licencee_fname_lname_address.csv'
 
-INDIVIDUAL_LICNUM = 'result-of-IMIS-with-fairtrading-and-certificates/match_inv_and_imis_with_license_number.csv'
-INDIVIDUAL_LICNUM_LIC = 'result-of-IMIS-with-fairtrading-and-certificates/match_inv_and_imis_with_license_number_and_license.csv'
-INDIVIDUAL_LICNUM_LIC_FNAME_LNAME = 'result-of-IMIS-with-fairtrading-and-certificates/match_inv_and_imis_with_licence_number_licencee_fname_lname.csv'
-INDIVIDUAL_FULL_CONDITION = 'result-of-IMIS-with-fairtrading-and-certificates/match_inv_and_imis_licence_number_licencee_fname_lname_address.csv'
-INDIVIDUAL_LIC = 'result-of-IMIS-with-fairtrading-and-certificates/match_inv_and_imis_with_licensee.csv'
-INDIVIDUAL_LIC_FNAME_LNAME = 'result-of-IMIS-with-fairtrading-and-certificates/match_inv_and_imis_with_licencee_fname_lname.csv'
-INDIVIDUAL_LIC_FNAME_LNAME_ADDRESS = 'result-of-IMIS-with-fairtrading-and-certificates/match_inv_and_imis_licencee_fname_lname_address.csv'
+INDIVIDUAL_LICNUM = 'result_inv_reinsw/1_match_inv_and_imis_with_license_number.csv'
+INDIVIDUAL_LICNUM_LIC = 'result_inv_reinsw/2_match_inv_and_imis_with_license_number_and_license.csv'
+INDIVIDUAL_LICNUM_LIC_FNAME_LNAME = 'result_inv_reinsw/3_match_inv_and_imis_with_licence_number_licencee_fname_lname.csv'
+INDIVIDUAL_FULL_CONDITION = 'result_inv_reinsw/4_match_inv_and_imis_licence_number_licencee_fname_lname_address.csv'
+INDIVIDUAL_LIC = 'result_inv_reinsw/5_match_inv_and_imis_with_licensee.csv'
+INDIVIDUAL_LIC_FNAME_LNAME = 'result_inv_reinsw/6_match_inv_and_imis_with_licencee_fname_lname.csv'
+INDIVIDUAL_LIC_FNAME_LNAME_ADDRESS = 'result_inv_reinsw/7_match_inv_and_imis_licencee_fname_lname_address.csv'
 
 
 # CSV_HEADER = ["company", "licensee", "imis_id", "state", "suburb",
