@@ -59,7 +59,7 @@ def lambda_handler(event, context):
     certificate_lic_and_fname_and_lname_and_address_obj = s3_client.get_object(
         Bucket=bucket_name, Key=_config.S3_CERTIFICATE_LIC_FNAME_LNAME_ADDRESS)
 
-    # Convert csv files to dataframe
+    # Convert csv files to dataframes
     individual_lic_num_df = pd.read_csv(individual_lic_num_obj['Body'])
     certificate_lic_num_df = pd.read_csv(certificate_lic_num_obj['Body'])
     individual_lic_and_lic_num_df = pd.read_csv(
@@ -96,11 +96,12 @@ def lambda_handler(event, context):
     }
 
     # Upload the resulting dataframes to S3
-    for result_name, result_df in results.items():
+    for i, (result_name, result_df) in enumerate(results.items()):
         csv_buffer = io.StringIO()
         result_df.to_csv(csv_buffer, index=False)
-        s3_client.put_object(Body=csv_buffer.getvalue(
-        ), Bucket=bucket_name, Key=f'result-individual-and-certificates/{result_name}.csv')
+        file_name = f'{i+1}_{result_name}.csv'
+        s3_client.put_object(Body=csv_buffer.getvalue(),
+                             Bucket=bucket_name, Key=f'result-individual-and-certificates/{file_name}')
 
     return {
         'statusCode': 200,
