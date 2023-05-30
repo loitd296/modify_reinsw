@@ -28,15 +28,6 @@ INDIVIDUAL_LIC = 'result-of-IMIS-with-fairtrading-and-certificates/match_inv_and
 INDIVIDUAL_LIC_FNAME_LNAME = 'result-of-IMIS-with-fairtrading-and-certificates/match_inv_and_imis_with_licencee_fname_lname.csv'
 INDIVIDUAL_LIC_FNAME_LNAME_ADDRESS = 'result-of-IMIS-with-fairtrading-and-certificates/match_inv_and_imis_licencee_fname_lname_address.csv'
 
-# NSW
-AUTHORIZATION = os.getenv(
-    "AUTHORIZATION",
-    "Basic ZWpwR0FjcUUyOTI0VmlJRUd3NlJLcnVpUmFJczA5UkE6RDhidjJyREpsemhlVE9vQQ==")
-API_KEY = os.getenv("API_KEY", "ejpGAcqE2924ViIEGw6RKruiRaIs09RA")
-ACCESS_TOKEN_URL = "https://api.onegov.nsw.gov.au/oauth/client_credential/accesstoken?grant_type=client_credentials"
-VERIFICATION_URL = "https://api.onegov.nsw.gov.au/propertyregister/v1/verify?licenceNumber="
-BROWSE_URL = "https://api.onegov.nsw.gov.au/propertyregister/v1/browse?searchText="
-DETAIL_URL = "https://api.onegov.nsw.gov.au//propertyregister/v1/details?licenceID="
 
 # CSV_HEADER = ["company", "licensee", "imis_id", "state", "suburb",
 #               "license_is_valid", "license_date", "license_number",
