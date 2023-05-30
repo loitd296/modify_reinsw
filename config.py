@@ -1,40 +1,99 @@
+import pandas as pd
+import config as _config
+import boto3
 import os
-
-CERTIFICATE_ORIGINAL_PATH = "data/certificate.csv"
-INDIVIDUAL_ORIGINAL_PATH = "data/individual.csv"
-CERTIFICATE_PATH = "data/certificates_with_status.csv"
-INDIVIDUAL_PATH = "data/individuals_with_status.csv"
-REINSW_PATH = "data/reinsw_report.csv"
-
-OUTPUT_PATH = "data/output.csv"
-OUTPUT_PATH_CERTIFICATE = "data/licence_certificate.csv"
-OUTPUT_PATH_INDIVIDUAL = "data/licence_individual.csv"
-OUTPUT_PATH_REINSW = "data/licence_reinsw.csv"
-
-# matching certificate & individual
-CERTIFICATE_LICNUM = 'result_cer_reinsw/1_match_cert_and_imis_with_license_number.csv'
-CERTIFICATE_LICNUM_LIC = 'result_cer_reinsw/2_match_cert_and_imis_with_license_number_and_licensee.csv'
-CERTIFICATE_LICNUM_LIC_FNAME_LNAME = 'result_cer_reinsw/3_match_cert_and_imis_with_licence_number_licencee_fname_lname.csv'
-CERTIFICATE_FULL_CONDITION = 'result_cer_reinsw/4_match_cert_and_imis_with_licence_number_licencee_fname_lname_address.csv'
-CERTIFICATE_LIC = 'result_cer_reinsw/5_match_cert_and_imis_with_licensee.csv'
-CERTIFICATE_LIC_FNAME_LNAME = 'result_cer_reinsw/6_match_cert_and_imis_licencee_fname_lname.csv'
-CERTIFICATE_LIC_FNAME_LNAME_ADDRESS = 'result_cer_reinsw/7_match_cert_and_imis_licencee_fname_lname_address.csv'
-
-INDIVIDUAL_LICNUM = 'result_inv_reinsw/1_match_inv_and_imis_with_license_number.csv'
-INDIVIDUAL_LICNUM_LIC = 'result_inv_reinsw/2_match_inv_and_imis_with_license_number_and_license.csv'
-INDIVIDUAL_LICNUM_LIC_FNAME_LNAME = 'result_inv_reinsw/3_match_inv_and_imis_with_licence_number_licencee_fname_lname.csv'
-INDIVIDUAL_FULL_CONDITION = 'result_inv_reinsw/4_match_inv_and_imis_licence_number_licencee_fname_lname_address.csv'
-INDIVIDUAL_LIC = 'result_inv_reinsw/5_match_inv_and_imis_with_licensee.csv'
-INDIVIDUAL_LIC_FNAME_LNAME = 'result_inv_reinsw/6_match_inv_and_imis_with_licencee_fname_lname.csv'
-INDIVIDUAL_LIC_FNAME_LNAME_ADDRESS = 'result_inv_reinsw/7_match_inv_and_imis_licencee_fname_lname_address.csv'
+import io
+import concurrent.futures
 
 
-# CSV_HEADER = ["company", "licensee", "imis_id", "state", "suburb",
-#               "license_is_valid", "license_date", "license_number",
-#               "first_name", "last_name", "post_code", "created_at", "updated_at",
-#               "licence_status", "licence_type", "licence_id", "classes",
-#               "class_names", "history", "expiring", "new", "is_change",]
+def read_csv_from_s3(bucket_name, key):
+    s3_client = boto3.client('s3')
+    obj = s3_client.get_object(Bucket=bucket_name, Key=key)
+    df = pd.read_csv(obj['Body'])
+    return df
 
-CSV_HEADER = ["licensee", "state", "suburb", "license_is_valid", "license_date",
-              "license_number", "first_name", "last_name", "post_code", "created_at", "updated_at",
-              "licence_status", "licence_type", "licence_id", "classes", "class_names", "history", "expiring"]
+
+def upload_csv_to_s3(csv_buffer, bucket_name, key):
+    s3_client = boto3.client('s3')
+    s3_client.put_object(Body=csv_buffer.getvalue(),
+                         Bucket=bucket_name, Key=key)
+
+
+def process_dataframe(match_result_inv_cert_df, result_name):
+    # Perform any data processing or merging operations on the dataframe
+    # ...
+
+    # Return the processed dataframe
+    return match_result_inv_cert_df
+
+
+def lambda_handler(event, context):
+    """
+    Lambda function handler to process dataframes, merge data,
+    and upload results to an S3 bucket.
+
+    Reads several CSV files containing data on Fairtrade individual licenses
+    and certificate licenses. Concatenates and merges the records from these files
+    based on specific conditions, and uploads the resulting dataframes to separate CSV files in S3.
+
+    Parameters
+    ----------
+    event : dict
+        The event data passed to the Lambda function.
+    context : LambdaContext
+        The context object representing the runtime information.
+
+    Returns
+    -------
+    dict
+        A dictionary containing the status and message of the Lambda function execution.
+    """
+    bucket_name = _config.S3_BUCKET_NAME
+
+    # List of CSV files to process
+    csv_files = [
+        _config.S3_INDIVIDUAL_LICNUM,
+        _config.S3_CERTIFICATE_LICNUM,
+        _config.S3_INDIVIDUAL_LICNUM_LIC,
+        _config.S3_CERTIFICATE_LICNUM_LIC,
+        _config.S3_INDIVIDUAL_LICNUM_LIC_FNAME_LNAME,
+        _config.S3_CERTIFICATE_LICNUM_LIC_FNAME_LNAME,
+        _config.S3_INDIVIDUAL_FULL_CONDITION,
+        _config.S3_CERTIFICATE_FULL_CONDITION,
+        _config.S3_INDIVIDUAL_LIC,
+        _config.S3_CERTIFICATE_LIC,
+        _config.S3_INDIVIDUAL_LIC_FNAME_LNAME,
+        _config.S3_CERTIFICATE_LIC_FNAME_LNAME,
+        _config.S3_INDIVIDUAL_LIC_FNAME_LNAME_ADDRESS,
+        _config.S3_CERTIFICATE_LIC_FNAME_LNAME_ADDRESS
+    ]
+
+    results = {}
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        # Submit tasks for reading CSV files concurrently
+        file_futures = {executor.submit(
+            read_csv_from_s3, bucket_name, csv_file): csv_file for csv_file in csv_files}
+
+        # Process the dataframes as they become available
+        for future in concurrent.futures.as_completed(file_futures):
+            csv_file = file_futures[future]
+            try:
+                df = future.result()
+                # Perform data processing on the dataframe
+                result_df = process_dataframe(df, csv_file)
+                results[csv_file] = result_df
+            except Exception as e:
+                print(f"Error processing CSV file '{csv_file}': {str(e)}")
+
+    # Upload the resulting dataframes to S3
+    for result_name, result_df in results.items():
+        csv_buffer = io.StringIO()
+        result_df.to_csv(csv_buffer, index=False)
+        upload_csv_to_s3(csv_buffer, bucket_name,
+                         f'result-individual-and-certificates/{result_name}.csv')
+
+    return {
+        'statusCode': 200,
+        'body': 'Data processing and upload to S3 completed successfully.'
+    }

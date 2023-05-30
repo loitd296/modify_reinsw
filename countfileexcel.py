@@ -23,7 +23,7 @@ def count_records_in_folder(folder_path):
 
 
 # Example usage
-folder_path = 'result-of-IMIS-with-fairtrading-and-certificates'
+folder_path = 'result_cer_reinsw'
 file_records = count_records_in_folder(folder_path)
 
 for file, count in file_records.items():
