@@ -55,3 +55,11 @@ This file contains the main function that processes several CSV files containing
 - **Main function for processing multiple CSV files.**
 - **Concatenating and merging records based on specific conditions.**
 - **Writing merged results to separate CSV files.**
+
+## 7. lambda_match_cer_inv.py
+
+This file contains the main Lambda function handler that processes dataframes, merges data, and uploads results to an S3 bucket. It reads CSV files from an S3 bucket, preprocesses the individual and certificate dataframes, merges them with the NSW report, and uploads the resulting dataframes to separate CSV files in S3.
+
+**Features:**
+
+- **Lambda function handler for processing dataframes.**
