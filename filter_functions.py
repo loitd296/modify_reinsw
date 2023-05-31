@@ -93,7 +93,7 @@ def extract_first_last_name(licensee: str) -> pd.Series:
     The index 0 is used to access the first name in the 'name_parts' list, resulting in 'Nannan':
     `first_name = name_parts[0]`
 
-    The index 1 is not used in this case since there is only one name in the 'name_parts' list.
+    The index -1 is not used in this case since there is only one name in the 'name_parts' list.
     Therefore, `last_name_index` is set to None.
     """
     # Check if licensee is a string

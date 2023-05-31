@@ -1,5 +1,25 @@
 import pandas as pd
 import config as _config
+import os
+
+
+def process_dataframes_and_save_results(individual_paths, certificate_paths, result_folder):
+    """
+    Processes dataframes, merges data, and saves the results to CSV files.
+
+    Args:
+    individual_paths: List of paths to individual data CSV files.
+    certificate_paths: List of paths to certificate data CSV files.
+    result_folder: The folder where the result CSV files will be saved.
+    """
+    for ind_path, cert_path in zip(individual_paths, certificate_paths):
+        ind_df = pd.read_csv(ind_path)
+        cert_df = pd.read_csv(cert_path)
+        result_df = pd.concat([ind_df, cert_df])
+
+        file_name = os.path.basename(ind_path)
+        result_file_path = os.path.join(result_folder, file_name)
+        result_df.to_csv(result_file_path, index=False)
 
 
 def main():
@@ -8,8 +28,8 @@ def main():
     and write results to CSV files.
 
     Reads several CSV files containing data on Fairtrade individual licenses
-    and certificate licenses. Concatenates and merges the records from these files
-    based on specific conditions, and writes the resulting dataframes to separate CSV files.
+    and certificate licenses. Concatenates and merges the records from these files,
+    and writes the resulting dataframes to separate CSV files.
 
     Parameters
     ----------
@@ -19,44 +39,30 @@ def main():
     -------
     None
     """
-    individual_lic_num_df = pd.read_csv(_config.S3_INDIVIDUAL_LICNUM)
-    certificate_lic_num_df = pd.read_csv(_config.S3_CERTIFICATE_LICNUM)
-    individual_lic_and_lic_num_df = pd.read_csv(
-        _config.S3_INDIVIDUAL_LICNUM_LIC)
-    certificate_lic_and_lic_num_df = pd.read_csv(
-        _config.S3_CERTIFICATE_LICNUM_LIC)
-    individual_lic_and_lic_num_and_fname_and_lname_df = pd.read_csv(
-        _config.S3_INDIVIDUAL_LICNUM_LIC_FNAME_LNAME)
-    certificate_lic_and_lic_num_and_fname_and_lname_df = pd.read_csv(
-        _config.S3_CERTIFICATE_LICNUM_LIC_FNAME_LNAME)
-    individual_full_condition_df = pd.read_csv(
-        _config.S3_INDIVIDUAL_FULL_CONDITION)
-    certificate_full_condition_df = pd.read_csv(
-        _config.S3_CERTIFICATE_FULL_CONDITION)
-    individual_lic_df = pd.read_csv(_config.S3_INDIVIDUAL_LIC)
-    certificate_lic_df = pd.read_csv(_config.S3_CERTIFICATE_LIC)
-    individual_lic_and_fname_and_lname_df = pd.read_csv(
-        _config.S3_INDIVIDUAL_LIC_FNAME_LNAME)
-    certificate_lic_and_fname_and_lname_df = pd.read_csv(
-        _config.S3_CERTIFICATE_LIC_FNAME_LNAME)
-    individual_lic_and_fname_and_lname_and_address_df = pd.read_csv(
-        _config.S3_INDIVIDUAL_LIC_FNAME_LNAME_ADDRESS)
-    certificate_lic_and_fname_and_lname_and_address_df = pd.read_csv(
-        _config.S3_CERTIFICATE_LIC_FNAME_LNAME_ADDRESS)
+    individual_paths = [
+        _config.S3_INDIVIDUAL_LICNUM,
+        _config.S3_INDIVIDUAL_LICNUM_LIC,
+        _config.S3_INDIVIDUAL_LICNUM_LIC_FNAME_LNAME,
+        _config.S3_INDIVIDUAL_FULL_CONDITION,
+        _config.S3_INDIVIDUAL_LIC,
+        _config.S3_INDIVIDUAL_LIC_FNAME_LNAME,
+        _config.S3_INDIVIDUAL_LIC_FNAME_LNAME_ADDRESS
+    ]
 
-    results = {
-        'result_on_lic_num': pd.concat([individual_lic_num_df, certificate_lic_num_df]),
-        'result_on_lic_num_lic': pd.concat([individual_lic_and_lic_num_df, certificate_lic_and_lic_num_df]),
-        'result_on_lic_num_lic_lname_fname': pd.concat([individual_lic_and_lic_num_and_fname_and_lname_df, certificate_lic_and_lic_num_and_fname_and_lname_df]),
-        'result_on_full_condition': pd.concat([individual_full_condition_df, certificate_full_condition_df]),
-        'result_on_lic': pd.concat([individual_lic_df, certificate_lic_df]),
-        'result_on_lic_lname_fname': pd.concat([individual_lic_and_fname_and_lname_df, certificate_lic_and_fname_and_lname_df]),
-        'result_on_lic_lname_fname_address': pd.concat([individual_lic_and_fname_and_lname_and_address_df, certificate_lic_and_fname_and_lname_and_address_df])
-    }
+    certificate_paths = [
+        _config.S3_CERTIFICATE_LICNUM,
+        _config.S3_CERTIFICATE_LICNUM_LIC,
+        _config.S3_CERTIFICATE_LICNUM_LIC_FNAME_LNAME,
+        _config.S3_CERTIFICATE_FULL_CONDITION,
+        _config.S3_CERTIFICATE_LIC,
+        _config.S3_CERTIFICATE_LIC_FNAME_LNAME,
+        _config.S3_CERTIFICATE_LIC_FNAME_LNAME_ADDRESS
+    ]
 
-    for i, (result_name, result_df) in enumerate(results.items()):
-        result_df.to_csv(
-            f"result-individual-and-certificates/{i+1}_{result_name}.csv", index=False)
+    result_folder = "result-individual-and-certificates"
+
+    process_dataframes_and_save_results(
+        individual_paths, certificate_paths, result_folder)
 
 
 if __name__ == "__main__":
